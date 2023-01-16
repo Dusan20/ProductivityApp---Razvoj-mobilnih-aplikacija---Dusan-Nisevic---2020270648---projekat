@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ProductivityApp_ver1.2</string>
+    <string name="timer" />
+    <string name="to_do_lists" />
+    <string name="button" />
+    <string name="exit" />
+    <string name="timer_za_fokusiranje_u_minutima" />
+    <string name="tajmer_za_odmor_u_minutima" />
+    <string name="zapocnite_odmor" />
+    <string name="_00_00" />
+    <string name="start1" />
+    <string name="reset" />
+    <string name="nazad2" />
+    <string name="nova_lista" />
+    <string name="nazad" />
+    <string name="pretraga" />
+    <string name="ime" />
+    <string name="unesite_ime_vase_liste" />
+    <string name="dodaj" />
+    <string name="odustani" />
+</resources>
