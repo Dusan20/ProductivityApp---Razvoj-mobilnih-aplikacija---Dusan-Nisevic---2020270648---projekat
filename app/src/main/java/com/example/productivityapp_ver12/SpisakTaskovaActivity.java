@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,8 @@ import java.util.Map;
 
 public class SpisakTaskovaActivity extends AppCompatActivity {
 
+    private DBHandler dbHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,13 +37,16 @@ public class SpisakTaskovaActivity extends AppCompatActivity {
         Button BNazad = findViewById(R.id.BBack);
         Button BSacuvaj = findViewById(R.id.Bsave);
         EditText Naslov = findViewById(R.id.naslov_spiska);
+        EditText TaskList = findViewById(R.id.taskview);
         TextView ErrorMessage = findViewById(R.id.err);
 
         Intent IRDL = new Intent(SpisakTaskovaActivity.this, ToDoActivity2.class);
 
         String naslov = getIntent().getStringExtra("listaime");
         String id = getIntent().getStringExtra("listaid");
+        String task = getIntent().getStringExtra("listatask");
         Naslov.setText(naslov);
+        TaskList.setText(task);
 
         BNazad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +78,7 @@ public class SpisakTaskovaActivity extends AppCompatActivity {
 
                                 String name = respObj.getString("ime_liste_edit");
                                 String id = respObj.getString("id_liste_edit");
+                                String tasks = respObj.getString("task_liste_edit");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -79,8 +86,9 @@ public class SpisakTaskovaActivity extends AppCompatActivity {
                     }, new com.android.volley.Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // method to handle errors.
                             Toast.makeText(SpisakTaskovaActivity.this, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+                            dbHandler = new DBHandler(SpisakTaskovaActivity.this);
+                            dbHandler.updateCourse(id, Naslov.getText().toString(), TaskList.getText().toString());
                         }
                     }) {
                         @Override
@@ -89,6 +97,7 @@ public class SpisakTaskovaActivity extends AppCompatActivity {
 
                             params.put("ime_liste_edit", Naslov.getText().toString());
                             params.put("id_liste_edit", id);
+                            params.put("task_liste_edit",TaskList.getText().toString());
                             return params;
                         }
                     };

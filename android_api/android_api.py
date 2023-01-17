@@ -66,6 +66,7 @@ def nova_lista_json_adder():
                     
             nova_lista['id']= str(id_test) 
             nova_lista['ime']=nova_lista_ime
+            nova_lista['taskovi']=""
             data.append(nova_lista)
     except(Exception):
         return "Greska pri ucitavanju json fajla za citanje"
@@ -82,6 +83,7 @@ def nova_lista_json_edit():
 
     lista_ime_edit = request.form.get('ime_liste_edit')
     lista_id_edit = request.form.get('id_liste_edit')
+    lista_task_edit = request.form.get('task_liste_edit')
     print(lista_ime_edit)
     print(lista_id_edit)
     try:
@@ -90,6 +92,7 @@ def nova_lista_json_edit():
             for el in data:
                 if str(el['id']) == lista_id_edit:
                     el['ime'] = lista_ime_edit
+                    el['taskovi']=lista_task_edit
             print(data)
     except(Exception):
         return "Greska pri ucitavanju json fajla za citanje"

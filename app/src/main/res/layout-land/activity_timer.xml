@@ -8,48 +8,52 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32">
 
         <EditText
             android:id="@+id/EditFocusTimer"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="50dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:background="@drawable/custom_input"
-            android:hint="Tajmer za fokusiranje u minutima..."
-            android:paddingStart="10dp"
-            android:layout_marginTop="2dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="2dp"
+            android:autofillHints=""
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Tajmer za fokusiranje u minutima..."
             android:inputType="number"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:textColorHint="#757575"
-            android:visibility="visible"
-            android:paddingLeft="10dp" />
+            android:visibility="visible" />
 
         <EditText
             android:id="@+id/EditOdmorTimer"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="50dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:paddingStart="10dp"
-            android:hint="Tajmer za odmor u minutima..."
-            android:layout_marginTop="5dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="5dp"
+            android:autofillHints=""
             android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Tajmer za odmor u minutima..."
             android:inputType="number"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:textColorHint="#757575"
-            android:visibility="visible"
-            android:paddingLeft="10dp" />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/TimerN"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
@@ -61,12 +65,13 @@
         android:id="@+id/BOdmor"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:layout_marginBottom="15dp"
         android:text="zapocnite odmor"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/text_view_countdown"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_view_countdown"
@@ -78,36 +83,40 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.41000003" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_start_pause"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="20dp"
         android:text="start"
+        app:layout_constraintBottom_toTopOf="@+id/button_reset"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_countdown" />
+        app:layout_constraintTop_toBottomOf="@+id/BOdmor" />
 
     <Button
         android:id="@+id/button_reset"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="28dp"
         android:layout_toEndOf="@+id/button_start_pause"
         android:layout_toRightOf="@+id/button_start_pause"
         android:text="restart"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_start_pause" />
+        app:layout_constraintHorizontal_bias="0.849"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/BBack2"
         android:layout_width="250dp"
         android:layout_height="70dp"
+        android:layout_marginBottom="30dp"
         android:text="nazad"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -2,12 +2,14 @@ package com.example.productivityapp_ver12;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -32,7 +34,6 @@ public class TimerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-
 
         mTextViewCountDown = findViewById(R.id.text_view_countdown);
         naslov = findViewById(R.id.TimerN);
@@ -108,12 +109,19 @@ public class TimerActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                final MediaPlayer mp = MediaPlayer.create(TimerActivity.this, R.raw.sample_1);
+                naslov = findViewById(R.id.TimerN);
+
                 mTimerRunning = false;
                 mTimerStarted = false;
+                mp.start();
+                Toast.makeText(TimerActivity.this, "Tajmer je istekao", Toast.LENGTH_SHORT).show();
                 mButtonStartPause.setText("Start");
+                naslov.setVisibility(View.INVISIBLE);
                 mButtonStartPause.setVisibility(View.INVISIBLE);
                 mButtonRestMode.setVisibility(View.VISIBLE);
                 mButtonReset.setVisibility(View.VISIBLE);
+
             }
         }.start();
 

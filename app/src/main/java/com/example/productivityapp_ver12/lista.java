@@ -2,13 +2,18 @@ package com.example.productivityapp_ver12;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class  lista{
+    public static final String TABLE_NAME="lista";
+    public static final String FIELD_ID="id";
+    public static final String FIELD_IME="imeL";
+    public static final String FIELD_TASK="spisak";
+
+
     private String id;
     private String imeL;
-    //private ArrayList<String> spisak;
+    private String spisak;
 
     public String getId() {
         return id;
@@ -18,9 +23,9 @@ public class  lista{
         return imeL;
     }
 
-   // public ArrayList<String> getSpisak() {
-   //     return spisak;
-   // }
+    public String getSpisak() {
+        return spisak;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -30,14 +35,14 @@ public class  lista{
         this.imeL = imeL;
     }
 
-   // public void setSpisak(ArrayList<String> spisak) {
-   //     this.spisak = spisak;
-   // }
+    public void setSpisak(String spisak) {
+        this.spisak = spisak;
+    }
 
-    public lista(String id, String imeL) {
+    public lista(String id, String imeL, String spisak) {
         this.id = id;
         this.imeL = imeL;
-       // this.spisak = spisak;
+        this.spisak = spisak;
     }
 
     public lista() {
@@ -53,17 +58,21 @@ public class  lista{
             }
             if(o.has("ime")){
                 l.setImeL(o.getString("ime"));
+            }if(o.has("taskovi")){
+                l.setImeL(o.getString("taskovi"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return l;
     }
+
     @Override
     public String toString() {
-        return "liste{" +
+        return "lista{" +
                 "id='" + id + '\'' +
                 ", imeL='" + imeL + '\'' +
+                ", spisak='" + spisak + '\'' +
                 '}';
     }
 }

@@ -23,13 +23,13 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.chromium.net.UrlRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,6 +44,8 @@ public class ToDoActivity2 extends AppCompatActivity {
     private Button newlpopup_odustani;
     private EditText newlpopup_ime;
     private TextView newlpopup_title;
+
+    private DBHandler dbHandler;
 
     public EditText SearchBar;
 
@@ -70,15 +72,15 @@ public class ToDoActivity2 extends AppCompatActivity {
         BAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewContactDialog();
+                createNewDialog();
             }
         });
 
-        getData_json();
+        getData();
 
     }
 
-    public void createNewContactDialog() {
+    public void createNewDialog() {
         dialogBuilder = new AlertDialog.Builder(this);
         final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
 
@@ -96,51 +98,52 @@ public class ToDoActivity2 extends AppCompatActivity {
         newlpopup_dodaj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(newlpopup_ime.getText().toString().isEmpty()){
-                newlpopup_title.setText("Morate uneti ime liste");
-                newlpopup_title.setTextColor(0x99990800);
-                }
-                else {
+                if (newlpopup_ime.getText().toString().isEmpty()) {
+                    newlpopup_title.setText("Morate uneti ime liste");
+                    newlpopup_title.setTextColor(0x99990800);
+                } else {
                     RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                        String url = "http://192.168.1.11:5000/json/add/";
-                            StringRequest request = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
+                    String url = "http://192.168.1.11:5000/json/add/";
+                    StringRequest request = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
 
 
-                                    Toast.makeText(ToDoActivity2.this, "Data sent to API", Toast.LENGTH_SHORT).show();
-                                    try {
-                                        JSONObject respObj = new JSONObject(response);
+                            Toast.makeText(ToDoActivity2.this, "Data sent to API", Toast.LENGTH_SHORT).show();
+                            try {
+                                JSONObject respObj = new JSONObject(response);
 
-                                        String name = respObj.getString("ime_liste");
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, new com.android.volley.Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    // method to handle errors.
-                                    Toast.makeText(ToDoActivity2.this, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
-                                }
-                            }) {
-                                @Override
-                                protected Map<String, String> getParams() {
-                                    Map<String, String> params = new HashMap<String, String>();
-
-                                    params.put("ime_liste", newlpopup_ime.getText().toString());
-                                    return params;
-                                }
-                            };
-                            queue.add(request);
-                            finish();
-                            overridePendingTransition(0, 0);
-                            startActivity(getIntent());
-                            overridePendingTransition(0, 0);
+                                String name = respObj.getString("ime_liste");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                }
+                    }, new com.android.volley.Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // method to handle errors.
+                            Toast.makeText(ToDoActivity2.this, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+                            dbHandler = new DBHandler(ToDoActivity2.this);
+                            dbHandler.addnewlist(newlpopup_ime.getText().toString(), "");
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
 
-            });
+                            params.put("ime_liste", newlpopup_ime.getText().toString());
+                            return params;
+                        }
+                    };
+                    queue.add(request);
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
+                }
+            }
+
+        });
 
 
         newlpopup_odustani.setOnClickListener(new View.OnClickListener() {
@@ -219,8 +222,8 @@ public class ToDoActivity2 extends AppCompatActivity {
 //        }
 //    }
 
-    public void printData_json() {
-        int delBrojac=-1;
+    public void printData() {
+        int delBrojac = -1;
         LayoutInflater inflater = getLayoutInflater();
         LinearLayout listeLayout = findViewById(R.id.scrollL);
         for (lista lista : liste) {
@@ -230,12 +233,14 @@ public class ToDoActivity2 extends AppCompatActivity {
             Button imeListe = red.findViewById(R.id.BList);
             imeListe.setText(lista.getImeL());
 
+
             imeListe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent IList = new Intent(ToDoActivity2.this, SpisakTaskovaActivity.class);
                     IList.putExtra("listaid", lista.getId());
                     IList.putExtra("listaime", lista.getImeL());
+                    IList.putExtra("listatask", lista.getSpisak());
                     startActivity(IList);
                     finish();
                 }
@@ -309,53 +314,137 @@ public class ToDoActivity2 extends AppCompatActivity {
                     overridePendingTransition(0, 0);
                 }
 
-                });
+            });
 
 
             listeLayout.addView(red);
         }
     }
 
-    private void getData_json() {
+    private void getData() {
 
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         String url = "http://192.168.1.11:5000/json";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+
+                dbHandler = new DBHandler(ToDoActivity2.this);
+                dbHandler.deleteAll();
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject responseObj = response.getJSONObject(i);
 
                         String IDL = responseObj.getString("id");
                         String ImeL = responseObj.getString("ime");
+                        String TaskL = responseObj.getString("taskovi");
 
-                        liste.add(new lista(IDL, ImeL));
+                        liste.add(new lista(IDL, ImeL, TaskL));
+
+                        dbHandler = new DBHandler(ToDoActivity2.this);
+                        dbHandler.addnewlist(ImeL,TaskL);
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                   }
+                    }
                 }
-                printData_json();
+
+
+                printData();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                TextView ErrorPopUp = findViewById(R.id.error_popup);
-                ErrorPopUp.setVisibility(View.VISIBLE);
-                ErrorPopUp.setText("Nije moguce preuzeti podatke.");
-
+                Toast.makeText(ToDoActivity2.this, "Nije moguce preuzeti podatke sa servera." + error, Toast.LENGTH_SHORT).show();
+                generateSQL();
             }
 
         });
         queue.add(jsonArrayRequest);
-}private void delReq_json(){
-        RequestQueue volleyQueue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.11:5000/json";
-
-
-
 
     }
 
+    public void generateSQL() {
+        dbHandler = new DBHandler(ToDoActivity2.this);
+        List<lista> ListeLocalSQL = dbHandler.readListe();
+        for (lista el : ListeLocalSQL) {
+            try {
+                String IDL = el.getId();
+                String ImeL = el.getImeL();
+                String TaskL = el.getSpisak();
+
+                liste.add(new lista(IDL, ImeL, TaskL));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        printDataSQL();
+    }
+
+    public void printDataSQL() {
+        LayoutInflater inflater = getLayoutInflater();
+        LinearLayout listeLayout = findViewById(R.id.scrollL);
+        for (lista lista : liste) {
+            View red = inflater.inflate(R.layout.sablon, null);
+
+            Button imeListe = red.findViewById(R.id.BList);
+            imeListe.setText(lista.getImeL());
+
+
+            imeListe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent IList = new Intent(ToDoActivity2.this, SpisakTaskovaActivity.class);
+                    IList.putExtra("listaid", lista.getId());
+                    IList.putExtra("listaime", lista.getImeL());
+                    IList.putExtra("listatask", lista.getSpisak());
+                    startActivity(IList);
+                    finish();
+                }
+            });
+
+            //Search
+            SearchBar = findViewById(R.id.SearchBar);
+            SearchBar.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    for (lista lista : liste) {
+                        if (!(imeListe.getText().toString().toLowerCase(Locale.ROOT).contains(SearchBar.getText().toString().toLowerCase(Locale.ROOT)))) {
+                            red.setVisibility(View.GONE);
+                        } else {
+                            red.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+
+
+            Button obrisiListu = red.findViewById(R.id.BObrisi);
+            obrisiListu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dbHandler.deleteCourse(lista.getId());
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
+                }
+
+            });
+
+
+            listeLayout.addView(red);
+        }
+    }
 }
+
